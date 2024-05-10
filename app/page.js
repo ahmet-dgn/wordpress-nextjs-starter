@@ -2,7 +2,7 @@ import getData from "@/lib/query";
 
 export default async function Home() {
   const posts = await getData("menu-items");
-  console.log(posts);
+
   return (
     <div className="blog-page">
       <h2>All Blog Posts</h2>
