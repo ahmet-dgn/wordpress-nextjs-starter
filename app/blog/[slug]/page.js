@@ -1,32 +1,29 @@
-export const dynamicParams = true;
+import getData from "@/lib/query";
 
+export const dynamicParams = true;
 export async function generateStaticParams() {
-  const response = await fetch(
-    `https://admin.lainoxturkiye.com/wp-json/wp/v2/posts`
-  );
+  const response = await fetch(`${process.env.WORDPRESS_API_URL}/posts`);
   const posts = await response.json();
 
   return posts.map((post) => ({
-    postSlug: post.slug,
+    slug: post.slug.toString(),
   }));
 }
 
-async function getSinglePost(postSlug) {
-  const response = await fetch(
-    `https://admin.lainoxturkiye.com/wp-json/wp/v2/posts/${postSlug}`
-  );
-  const post = await response.json();
-  return post;
-}
-
-const page = async ({ params }) => {
-  const post = await getSinglePost(params.postSlug);
-  console.log(post);
-  if (!post) {
+export default async function Post({ params }) {
+  const [postData] = await getData(`posts/?slug=${params.slug}`);
+  if (!postData) {
     return <div>Loading...</div>;
   }
 
-  return <div className="single-blog-page"></div>;
-};
-
-export default page;
+  return (
+    <div className="single-blog-page">
+      <h2>{postData.title.rendered}</h2>
+      <div className="blog-post">
+        <div
+          dangerouslySetInnerHTML={{ __html: postData.content.rendered }}
+        ></div>
+      </div>
+    </div>
+  );
+}
