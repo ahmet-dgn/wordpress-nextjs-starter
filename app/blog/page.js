@@ -1,9 +1,16 @@
 import getData from "@/lib/query";
 import Link from "next/link";
-export default async function Blog() {
-  const blogList = await getData("posts");
+import Pagination from "@/components/pagination";
+export default async function Blog({ searchParams }) {
+  const pageLimit = 6;
+  const page = searchParams.per_page;
+  const blogList = await getData(
+    `posts/?per_page=${pageLimit}${page ? "&page=" + page : ""}`
+  );
+
   return (
     <>
+      {blogList}
       {blogList.map((blog) => (
         <div>
           <Link href={`/blog/${blog.slug}`} className="post" key={blog.slug}>
@@ -15,6 +22,7 @@ export default async function Blog() {
           </Link>
         </div>
       ))}
+      <Pagination path={"blog"} pageLimit={pageLimit} page={page} />
     </>
   );
 }
