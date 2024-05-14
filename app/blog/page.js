@@ -4,16 +4,17 @@ import Pagination from "@/components/pagination";
 export default async function Blog({ searchParams }) {
   const pageLimit = 6;
   const page = searchParams.per_page;
-  const blogList = await getData(
-    `posts/?per_page=${pageLimit}${page ? "&page=" + page : ""}`
-  );
+  const query = await getData(`posts?per_page=${pageLimit}&page=1`);
+
+  const blogList = query.props.data;
+
+  console.log(query.props.xWpTotalPages);
 
   return (
     <>
-      {blogList}
       {blogList.map((blog) => (
         <div>
-          <Link href={`/blog/${blog.slug}`} className="post" key={blog.slug}>
+          <Link href={`blog/${blog.slug}`} className="post" key={blog.slug}>
             {blog.title.rendered}
 
             <div
