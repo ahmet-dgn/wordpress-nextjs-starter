@@ -6,11 +6,12 @@ export default async function Blog({ searchParams }) {
   //pageTotal: The number of pages(come from wordpress api)
   //blogList: The posts data
   //searchParams: It is next.js feture. Returns query (?) parameters in url
-  const pageLimit = 8;
-  const page = searchParams.page;
+  const pageLimit = 3;
+  let page = searchParams.page;
   const query = await getData(
     `posts?per_page=${pageLimit}${page ? "&page=" + page : "&page=1"}`
   );
+  console.log(page);
 
   const blogList = query.props.data;
   const pageTotal = query.props.xWpTotalPages;
