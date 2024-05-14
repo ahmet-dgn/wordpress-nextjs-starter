@@ -11,7 +11,8 @@ export async function generateStaticParams() {
 }
 
 export default async function Post({ params }) {
-  const [postData] = await getData(`posts/?slug=${params.slug}`);
+  const query = await getData(`posts/?slug=${params.slug}`);
+  const [postData] = query.props.data;
   if (!postData) {
     return <div>Loading...</div>;
   }

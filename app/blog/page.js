@@ -2,13 +2,18 @@ import getData from "@/lib/query";
 import Link from "next/link";
 import Pagination from "@/components/pagination";
 export default async function Blog({ searchParams }) {
-  const pageLimit = 6;
-  const page = searchParams.per_page;
-  const query = await getData(`posts?per_page=${pageLimit}&page=1`);
+  //pageLimit: The number of post in each page
+  //pageTotal: The number of pages(come from wordpress api)
+  //blogList: The posts data
+  //searchParams: It is next.js feture. Returns query (?) parameters in url
+  const pageLimit = 8;
+  const page = searchParams.page;
+  const query = await getData(
+    `posts?per_page=${pageLimit}${page ? "&page=" + page : "&page=1"}`
+  );
 
   const blogList = query.props.data;
-
-  console.log(query.props.xWpTotalPages);
+  const pageTotal = query.props.xWpTotalPages;
 
   return (
     <>
@@ -23,7 +28,15 @@ export default async function Blog({ searchParams }) {
           </Link>
         </div>
       ))}
-      <Pagination path={"blog"} pageLimit={pageLimit} page={page} />
+
+      {pageTotal > 1 && (
+        <Pagination
+          path={"blog"}
+          pageLimit={pageLimit}
+          page={page}
+          pageTotal={pageTotal}
+        />
+      )}
     </>
   );
 }

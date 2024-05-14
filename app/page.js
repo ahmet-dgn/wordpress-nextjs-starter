@@ -1,8 +1,8 @@
 import getData from "@/lib/query";
 
 export default async function Home() {
-  const posts = await getData("menu-items");
-
+  const query = await getData("menu-items");
+  const posts = query.props.data;
   return (
     <div className="blog-page">
       <h2>All Blog Posts</h2>
